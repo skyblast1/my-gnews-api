@@ -18,32 +18,43 @@ class  App {
         //this.sendQueryAndGetDataAPI();
     }
     
-    myToken = '07e6fded0ab089a90360fb12d25e4dbd';
+    #myToken = '07e6fded0ab089a90360fb12d25e4dbd';
     query;
-    result;
+    quantity = 3;
 
-    // получение запроса из формы
+    // getting query from form
     getFormData(event) {
         event.preventDefault();
-        const query = form.querySelector('.query');
-        const string = query.value.trim();
+        const string = form.querySelector('.query').value.trim();
+//        const string = query.value.trim();
         this.query = string;
-        this.sendQueryAndGetDataAPI(this.query);
+        this.sendQueryAndGetDataAPI(this.query, this.#myToken);
     }
 
-    // отправка запроса к API и получение данных
-    sendQueryAndGetDataAPI(){
-        
-        fetch(`https://gnews.io/api/v4/search?q=${this.query}&token=${this.myToken}`)
+    // send query to API & get data
+    sendQueryAndGetDataAPI(query, token){
+        log(query);
+        fetch(`https://gnews.io/api/v4/search?q=${query}&token=${token}`)
         .then(
-            response => response.json()
+            response => {
+                if (!response.ok) {
+                    throw new Error(response.status);
+                }
+                return response.json();
+            }
         )
         .then(
             data => {
+                log(data);
                 //this.getArticleFromApiArray(data.articles);
                 let arrayOfArticles = data.articles; // TEST!!!!!!!!!
 
-                const pagination = new Pagination(arrayOfArticles, 3);
+                const pagination = new Pagination(arrayOfArticles, this.quantity);
+            }
+        )
+        .catch(
+            error => {
+                this.displayErrorMessage(`Something wrong. ${error}. Make sure for the input is not empty.`)
             }
         )
     }
@@ -79,8 +90,12 @@ class  App {
         })();
     }
 
+    displayErrorMessage(message) {
+        articleContainer.insertAdjacentText('beforeend', message);
+    }
 
 }
+
 class Article {
 
     title;
@@ -91,7 +106,6 @@ class Article {
     publishedAt;
 
     constructor(data) {
-        //App.clear(articleContainer);
         this.title = data.title;
         this.description = data.description;
         this.content = data.content;
@@ -100,23 +114,19 @@ class Article {
         this.publishedAt = data.publishedAt;
         
     }
-
+    // отрисовка HTML блока со статьей
     display() {
-        // for (const obj of data) {
-            //const content = editContent(obj.content);
-            let htmlBlockArticle = `
-            <div class="article hidden">
-                <h3 class="title">${this.title}</h3>
-                <div class="imageBlock"><img src="${this.image}"></div>
-                <p class="date">${this.publishedAt}</p>
-                <p class="description">${this.description}</p>
-                
-                <a href="${this.url}">Read more</a>
-            </div>`;
-            //console.log(htmlBlockArticle);
+        let htmlBlockArticle = `
+        <div class="article hidden">
+            <h3 class="title">${this.title}</h3>
+            <div class="imageBlock"><img src="${this.image}"></div>
+            <p class="date">${this.publishedAt}</p>
+            <p class="description">${this.description}</p>
+            
+            <a href="${this.url}">Read more</a>
+        </div>`;
 
-            articleContainer.insertAdjacentHTML('beforeend', htmlBlockArticle);
-        //}
+        articleContainer.insertAdjacentHTML('beforeend', htmlBlockArticle);
     }
 
 }
@@ -141,13 +151,13 @@ class Pagination {
 
         this.activePageInit(this.paginationItems);
     }
-
+    // переключение отобрацение активной страницы
     activePageDisable() {
         if (this.activePage.activeColor) {
             this.activePage.activeColor.classList.remove('active');
         }
     }
-
+    // отображение активной страницы
     activePageInit(array) {
         
         array.forEach(element => {
@@ -158,7 +168,7 @@ class Pagination {
             }
         });
     }
-
+    // удаление стрелки назад 
     previousButton() {
         if(this.activePage.currentNumber > 1) {
             const paginationList = document.querySelector('.pagination-list');
@@ -170,7 +180,7 @@ class Pagination {
             previous.classList.add('hidden');
         }
     }
-
+    // удаление стрелки вперед 
     nextButton() {
         if(this.activePage.currentNumber === this.paginationItemQuantity) {
             const paginationList = document.querySelector('.pagination-list');
@@ -182,7 +192,7 @@ class Pagination {
             previous.classList.remove('hidden');
         }
     }
-
+    // отрисовка пагинации
     paginationDisplay() {
 
         paginationContainer.innerHTML = '';
@@ -217,13 +227,8 @@ class Pagination {
             li.addEventListener('click', (function () {
                 this.activePage.currentNumber = currentPage;
                 this.activePageInit(this.paginationItems);
-                // if (this.activePage.activeColor) {
-                //     this.activePage.activeColor.classList.remove('active');
-                // }
                 this.previousButton();
                 this.nextButton();
-                //this.activePage.activeColor = li;
-                //li.classList.add('active');
                 this.activePage.currentNumber = currentPage;
                 this.displayedQuantityOfArticles(this.arrayOfArticles, currentPage)}).bind(this));
 
@@ -256,7 +261,6 @@ class Pagination {
         let end = start + this.articlesOnPage;
         let newArray = array.slice(start, end);
         newArray.forEach(element => {
-            //log(element);
             const article = new Article(element).display();
         });
         App.animationArticles();

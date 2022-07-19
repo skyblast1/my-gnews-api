@@ -10,15 +10,18 @@
 </head>
 
 <body>
-    <form action="" method="" id="form" >
-        <label for="query">enter a query</label>
-        <input type="text" name="query" class="query" placeholder="enter a query">
-        <button class="btnSearch" type="submit">Search</button>
-    </form>
-
     <div class="wrapper" id="wrapper">
-        <div class="article-container"></div>
-        <div class="pagination-container"></div>
+        <div class="form-container">
+            <form action="" method="" id="form" class="flex-form">
+                <label for="query"></label>
+                <input type="search" name="query" class="query" placeholder="What do you want to search?">
+                <input type="submit" value="Search" class="btnSearch">
+            </form>
+        </div>
+        <div class="main-container" id="main-container">
+            <div class="article-container"></div>
+            <div class="pagination-container"></div>
+        </div>
     </div>
     <script src="./main.js"></script>
 </body>

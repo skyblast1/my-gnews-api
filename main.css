@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i');
-@import url('https://fonts.googleapis.com/css?family=Josefin+Slab:100,100i,300,300i,400,400i,600,600i,700,700i');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+/* @import url('https://fonts.googleapis.com/css?family=Josefin+Slab:100,100i,300,300i,400,400i,600,600i,700,700i'); */
 
 :root {
 	--bg: #1c628a;
 	--title: #00257F;
 	--para-text: rgba(0, 0, 0, 0.67);
-	--title-font: 'Josefin Slab', serif;
+	--title-font: 'Roboto', sans-serif;
 	--text-font: 'PT Serif', Serif;
 	--width: 20em;
 }
@@ -14,15 +14,12 @@
 	box-sizing: border-box;
 }
 
-#form {
-	width: 100%;
-}
-
 #wrapper {
-display: flex;
-flex-direction: column;
+	display: flex;
+	flex-direction: column;
+	min-width: 50vw;
 }
-
+/*****************карточки со статьями********************/
 @media screen and (max-width: 850px) {
 	.article-container {
 		flex-direction: column;
@@ -52,10 +49,17 @@ h6 {
 	font-family: var(--title-font);
 }
 
+
+.main-container {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .article-container {
 	display: flex;
 	flex: 1;
-	/* flex-wrap: wrap; */
+	align-items: center;
+	align-items: stretch;
 }
 
 .article img {
@@ -63,16 +67,19 @@ h6 {
 }
 
 .article {
-	
+
 	left: 90%;
 	width: var(--width);
 	background: #fff;
 	padding: 20px;
 	margin: 20px 20px;
+	box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.3);
+	overflow: hidden;
+
 }
 
 .article h3 {
-	font-size: calc(var(--width)/10);
+	font-size: calc(var(--width)/12);
 }
 
 .article p {
@@ -102,15 +109,29 @@ h1 {
 }
 
 .animated {
-	/* left:0%; */
+	animation: animated 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
 }
 
+@keyframes animated {
+	0% {
+		transform: scale(0.9);
+	}
+
+	100% {
+		transform: scale(1);
+	}
+}
+/********************************************************************/
 /******************* пагинация**************************************/
 .pagination-container {
 	width: 100%;
+	display: flex;
+    justify-content: center;
 }
+
 .pagination-list {
 	display: flex;
+	padding: 0px;
 }
 
 .pagi-item {
@@ -125,7 +146,128 @@ h1 {
 .pagi-item:hover,
 .active {
 	cursor: pointer;
-	color: red;
-	border: 1px solid red;
+	/* color: #ef3f5a; */
+	border: 1px solid #d73851;
+	background: #d73851;
 }
+
 /*********************************************************************/
+
+/*********************** форма **************************************/
+
+.form-container {
+	display: flex;
+    justify-content: center;
+	margin-bottom: 1em;
+}
+
+.flex-form input[type="submit"] {
+	background: #ef3f5a;
+	border: 1px solid #ef3f5a;
+	color: #fff;
+	padding: 0 30px;
+	cursor: pointer;
+	-webkit-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+	transition: all 0.2s;
+}
+
+.flex-form input[type="submit"]:hover {
+	background: #d73851;
+	border: 1px solid #d73851;
+}
+
+.flex-form {
+	display: -webkit-box;
+	display: flex;
+	z-index: 10;
+	position: relative;
+	width: 500px;
+	box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.flex-form>* {
+	border: 0;
+	padding: 0 0 0 10px;
+	background: #fff;
+	line-height: 50px;
+	font-size: 1rem;
+	border-radius: 0;
+	outline: 0;
+	-webkit-appearance: none;
+}
+
+input[type="search"] {
+	flex-basis: 500px;
+}
+
+#madeby {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 25px 100px;
+	color: #fff;
+}
+
+@media all and (max-width:800px) {
+	body {
+		font-size: 0.9rem;
+	}
+
+	.flex-form {
+		width: 100%;
+	}
+
+	input[type="search"] {
+		flex-basis: 100%;
+	}
+
+	.flex-form>* {
+		font-size: 0.9rem;
+	}
+
+	header {
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		flex-direction: column;
+		padding: 10px !important;
+	}
+
+	header h2 {
+		margin-bottom: 15px;
+	}
+
+	h1 {
+		font-size: 2rem;
+	}
+
+	.cover {
+		padding: 20px;
+	}
+
+	#madeby {
+		padding: 30px 20px;
+	}
+}
+
+@media all and (max-width:360px) {
+	header nav li {
+		margin: 0 10px;
+	}
+
+	.flex-form {
+		display: -webkit-box;
+		display: flex;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		flex-direction: column;
+	}
+
+	input[type="search"] {
+		flex-basis: 0;
+	}
+
+	label {
+		display: none;
+	}
+}
